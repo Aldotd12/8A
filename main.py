@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi import HTTPException
 from models import Genero, Roles, User, UpdateUser
 
-app = FastAPI()
+app = FastAPI() 
 
 db : List[User] = [
     User(
