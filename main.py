@@ -1,9 +1,9 @@
 '''Operacion CRUD con FastApi'''
 from typing import List
-from uuid import uuid4
+from uuid import UUID, uuid4
 from fastapi import FastAPI
 from fastapi import HTTPException
-from models import Genero, Roles, User
+from models import Genero, Roles, User, UpdateUser
 
 app = FastAPI()
 
@@ -57,3 +57,19 @@ async def delete_user(nombre):
         raise HTTPException(
             status_code=404, detail=f"Error al eliminar a {nombre} no encontrado."
         )
+@app.put("/users/{id}")
+async def update_user(id: UUID, user_update: UpdateUser):
+    for user in db:
+        if user.id == id:
+            if user_update.nombre is not None:
+                user.nombre = user_update.nombre
+            if user_update.apellidos is not None:
+                user.apellidos = user_update.apellidos
+            if user_update.genero is not None:
+                user.genero = user_update.genero
+            if user_update.roles is not None:
+                user.roles = user_update.roles
+            return {"message": f"Usuario con ID {id} actualizado exitosamente."}
+    raise HTTPException(
+        status_code=404, detail=f"Error al actualizar, ID {id} no encontrado."
+    )
